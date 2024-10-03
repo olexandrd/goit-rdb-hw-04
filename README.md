@@ -183,20 +183,31 @@ FROM
  INNER JOIN suppliers ON products.supplier_id = suppliers.id;
 ```
 
-```sh
-+------------+
-| rows_count |
-+------------+
-|        518 |
-+------------+
-```
-
 ---
 ![rows_count](img/4-1.png)
 
 #### 2
 
-TBD
+```sql
+SELECT
+ COUNT(*) as rows_count
+FROM
+    order_details
+    INNER JOIN orders AS o ON order_details.order_id = o.id
+    INNER JOIN customers ON o.customer_id = customers.id
+    INNER JOIN products ON order_details.product_id = products.id
+    LEFT JOIN categories ON products.category_id = categories.id
+    LEFT JOIN employees ON o.employee_id = employees.employee_id
+    LEFT JOIN shippers ON o.shipper_id = shippers.id
+    RIGHT JOIN suppliers ON products.supplier_id = suppliers.id;
+```
+
+При заміні INNER на LEFT або RIGHT кількість рядків повинна була б збільшуватись, оскільки відбувається включення всіх рядків з таблиць, які знаходяться зліва або справа від таблиці, до якої відбувається приєднання.
+Але на практиці кількість рядків залишається незмінною, або запит виконується аномально довго.
+
+---
+![rows_count left right](img/4-2-1.png)
+![rows_count left right](img/4-2-2.png)
 
 #### 3
 
